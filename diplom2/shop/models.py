@@ -1,6 +1,8 @@
 from django.db import models
-
+from django.urls import reverse
 from account.models import User
+
+
 
 
 class Shop(models.Model):
@@ -25,7 +27,7 @@ class Shop(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=40, verbose_name='Название')
     shops = models.ManyToManyField(Shop, verbose_name='Магазины', related_name='categories', blank=True)
-    # slug = models.SlugField(max_length=200, db_index=True, unique=True)
+    slug = models.SlugField(unique=True, null=True)
 
     class Meta:
         verbose_name = 'Категория'
@@ -35,12 +37,17 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('product_list_by_category', kwargs={'category_id': self.pk}
+                       )
+
+
 
 class Product(models.Model):
     name = models.CharField(max_length=80, verbose_name='Название')
     category = models.ForeignKey(Category, verbose_name='Категория', related_name='products', blank=True,
                                  on_delete=models.CASCADE)
-    # slug = models.SlugField(max_length=200, db_index=True, )
+    slug = models.SlugField(max_length=200, null=True)
 
     class Meta:
         verbose_name = 'Продукт'
@@ -50,13 +57,16 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('product', kwargs={'product_slug': self.slug})
+
 
 class ProductInfo(models.Model):
     model = models.CharField(max_length=80, verbose_name='Модель', blank=True)
     external_id = models.PositiveIntegerField(verbose_name='Внешний ИД')
-    product = models.ForeignKey(Product, verbose_name='Продукт', related_name='product_infos', blank=True,
+    product = models.ForeignKey(Product, verbose_name='Продукт', related_name='product_info', blank=True,
                                 on_delete=models.CASCADE)
-    shop = models.ForeignKey(Shop, verbose_name='Магазин', related_name='product_infos', blank=True,
+    shop = models.ForeignKey(Shop, verbose_name='Магазин', related_name='product_info', blank=True,
                              on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(verbose_name='Количество')
     price = models.PositiveIntegerField(verbose_name='Цена')
@@ -68,6 +78,8 @@ class ProductInfo(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['product', 'shop', 'external_id'], name='unique_product_info'),
         ]
+
+
 
 
 class Parameter(models.Model):
