@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'rest_framework.authtoken',
+    'djoser',
+    # 'django_rest_passwordreset',
 ]
 
 MIDDLEWARE = [
@@ -107,7 +109,23 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = "osichkina_elena@mail.ru"
+EMAIL_HOST_PASSWORD = "0t3K4Vu0EAFyGhdKb9Z3"
+EMAIL_USE_SSL = True
+SERVER_EMAIL = EMAIL_HOST_USER
+
+
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True, ##False,
+    'SERIALIZERS': {},
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -136,10 +154,21 @@ AUTHENTICATION_BACKENDS = [
 ]
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-REST_FRAMEWORK = {'DEFAULT_FILTER_BACKENDS':
-                 ['django_filters.rest_framework.DjangoFilterBackend'],
-                  'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination', 'PAGE_SIZE': 3,
-                  'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication',
-                                                     'rest_framework_simplejwt.authentication.JWTAuthentication',
-                                                     ]
-                  }
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': [
+            'django_filters.rest_framework.DjangoFilterBackend'
+    ],
+
+    # 'DEFAULT_PAGINATION_CLASS': [
+    #     'rest_framework.pagination.PageNumberPagination',
+    #     'PAGE_SIZE': 3,
+    # ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+
+
+    ]
+}

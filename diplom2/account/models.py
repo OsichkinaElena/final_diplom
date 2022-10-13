@@ -49,65 +49,65 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
-
 class User(AbstractUser):
-    """
-    Стандартная модель пользователей
-    """
-    REQUIRED_FIELDS = []
     objects = UserManager()
+    email = models.EmailField(verbose_name='Email', max_length=40, unique=True)
+    company = models.CharField(verbose_name='Компания', max_length=40, blank=True, null=True)
+    position = models.CharField(verbose_name='Должность', max_length=40, blank=True, null=True)
+    type = models.CharField(verbose_name='Тип пользователя', choices=USER_TYPE_CHOICES, max_length=5,
+                                default='buyer')
+
     USERNAME_FIELD = 'email'
-    email = models.EmailField(_('email address'), unique=True)
-    company = models.CharField(verbose_name='Компания', max_length=40, blank=True)
-    position = models.CharField(verbose_name='Должность', max_length=40, blank=True)
-    username_validator = UnicodeUsernameValidator()
-    username = models.CharField(
-        _('username'),
-        max_length=150,
-        help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
-        validators=[username_validator],
-        error_messages={
-            'unique': _("A user with that username already exists."),
-        },
-    )
-    is_active = models.BooleanField(
-        _('active'),
-        default=True,
-        help_text=_(
-            'Designates whether this user should be treated as active. '
-            'Unselect this instead of deleting accounts.'
-        ),
-    )
-    type = models.CharField(verbose_name='Тип пользователя', choices=USER_TYPE_CHOICES, max_length=5, default='buyer')
-
-    @property
-    def token(self):
-        """
-        Позволяет получить токен пользователя путем вызова user.token, вместо
-        user._generate_jwt_token(). Декоратор @property выше делает это
-        возможным. token называется "динамическим свойством".
-        """
-        return self._generate_jwt_token()
-
-    def _generate_jwt_token(self):
-        """
-        Генерирует веб-токен JSON, в котором хранится идентификатор этого
-        пользователя, срок действия токена составляет 1 день от создания
-        """
-        dt = datetime.now() + timedelta(days=1)
-
-        token = jwt.encode({
-            'id': self.pk,
-            'exp': dt.utcfromtimestamp(dt.timestamp())
-        }, settings.SECRET_KEY, algorithm='HS256')
-
-        return token.decode('utf-8')
+    REQUIRED_FIELDS = ['username', 'password']
 
     def __str__(self):
-
-        return f'{self.first_name} {self.last_name}'
+        return self.email
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = "Список пользователей"
         ordering = ('email',)
+
+
+class Contact(models.Model):
+    user = models.ForeignKey(User, verbose_name='Пользователь', related_name='contacts', blank=True,
+                                 on_delete=models.CASCADE)
+    city = models.CharField(max_length=50, verbose_name='Город')
+    street = models.CharField(max_length=100, verbose_name='Улица', blank=True)
+    house = models.CharField(max_length=35, verbose_name='Дом', blank=True)
+    apartment = models.CharField(max_length=15, verbose_name='Квартира', blank=True)
+    e_mail = models.EmailField(max_length=50, verbose_name='E-mail', blank=True)
+    phone = models.CharField(max_length=35, verbose_name='Телефон')
+    work_phone = models.CharField(max_length=40, verbose_name='Рабочий телефон', blank=True)
+
+    class Meta:
+        verbose_name = 'Контакт пользователя'
+        verbose_name_plural = "Список контактов пользователя"
+
+    def __str__(self):
+        return f'{self.city}, {self.phone}'
+
+
+    # @property
+    # def token(self):
+    #     """
+    #     Позволяет получить токен пользователя путем вызова user.token, вместо
+    #     user._generate_jwt_token(). Декоратор @property выше делает это
+    #     возможным. token называется "динамическим свойством".
+    #     """
+    #     return self._generate_jwt_token()
+    #
+    # def _generate_jwt_token(self):
+    #     """
+    #     Генерирует веб-токен JSON, в котором хранится идентификатор этого
+    #     пользователя, срок действия токена составляет 1 день от создания
+    #     """
+    #     dt = datetime.now() + timedelta(days=1)
+    #
+    #     token = jwt.encode({
+    #         'id': self.pk,
+    #         'exp': dt.utcfromtimestamp(dt.timestamp())
+    #     }, settings.SECRET_KEY, algorithm='HS256')
+    #
+    #     return token.decode('utf-8')
+
