@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_rest_passwordreset',
     'shop',
     'account',
     'orders_',
@@ -44,7 +45,6 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework.authtoken',
     'djoser',
-    # 'django_rest_passwordreset',
 ]
 
 MIDDLEWARE = [
@@ -112,20 +112,21 @@ AUTH_PASSWORD_VALIDATORS = [
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp.mail.ru'
-EMAIL_PORT = 465
+EMAIL_PORT = 2525
 EMAIL_HOST_USER = "osichkina_elena@mail.ru"
 EMAIL_HOST_PASSWORD = "0t3K4Vu0EAFyGhdKb9Z3"
-EMAIL_USE_SSL = True
-SERVER_EMAIL = EMAIL_HOST_USER
+EMAIL_USE_SSL = False
+EMAIL_USE_TLS = True
+# SERVER_EMAIL = EMAIL_HOST_USER
 
 
-DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '/password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': '/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '/activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True, ##False,
-    'SERIALIZERS': {},
-}
+# DJOSER = {
+#     'PASSWORD_RESET_CONFIRM_URL': '/password/reset/confirm/{uid}/{token}',
+#     'USERNAME_RESET_CONFIRM_URL': '/username/reset/confirm/{uid}/{token}',
+#     'ACTIVATION_URL': '/activate/{uid}/{token}',
+#     'SEND_ACTIVATION_EMAIL': True, ##False,
+#     'SERIALIZERS': {},
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

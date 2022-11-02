@@ -1,4 +1,4 @@
-
+from django.db.models import Q, Sum, F
 from .models import Category, Product, ProductInfo, Shop
 # from rest_framework.generics import ListAPIView, RetrieveAPIView
 from shop.serializers import ProductInfoSerializer, ShopSerializer, CategorySerializer

@@ -20,16 +20,12 @@ from django.contrib.admin import site
 
 
 urlpatterns = [
+
     path('admin/', admin.site.urls),
-    path('', include('shop.urls')),
-    # path('', include('account.urls')),
-    path('', include('orders_.urls')),
-    path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
-    # re_path(r'^auth/', include('djoser.urls.authtoken')),
-
-
-
+    path('', include('rest_framework.urls', namespace='rest_framework')),
+    path('shop/', include('shop.urls')),
+    path('account/', include('account.urls')),
+    path('orders_/', include('orders_.urls')),
 
 ]
 

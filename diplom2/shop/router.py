@@ -8,3 +8,7 @@ router = routers.SimpleRouter()
 router.register(r'shops', ShopView)
 router.register(r'categories', CategoryView)
 router.register(r'products', ProductInfoView, basename='products')
+
+print(router.urls)
+urlpatterns = []
+urlpatterns += router.urls

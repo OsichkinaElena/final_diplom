@@ -5,6 +5,9 @@ from .serializers import OrderSerializer, OrderItemSerializer, OrderItemCreateSe
 from .models import Product, Order, OrderItem #Cart, CartProduct,  Customer
 from account.models import Contact
 from rest_framework.views import APIView
+from django.http import JsonResponse
+from requests import get
+from rest_framework.response import Response
 
 
 class CartView(APIView):

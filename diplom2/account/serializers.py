@@ -14,6 +14,13 @@ class ContactSerializer(serializers.ModelSerializer):
         }
 
 
+class UserSerializer(serializers.ModelSerializer):
+    contacts = ContactSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'email', 'company', 'position', 'type', 'contacts')
+        read_only_fields = ('id',)
 # class RegistrationSerializer(serializers.ModelSerializer):
 #     """ Сериализация регистрации пользователя и создания нового. """
 #
@@ -96,7 +103,7 @@ class ContactSerializer(serializers.ModelSerializer):
 #             'token': user.token
 #
 #         }
-#
+
 # class UserSerializer(serializers.ModelSerializer):
 #     """ Ощуществляет сериализацию и десериализацию объектов User. """
 #
