@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from django.conf import settings
 import jwt
 
+
 USER_TYPE_CHOICES = (
     ('shop', 'Магазин'),
     ('buyer', 'Покупатель'),
